@@ -7,7 +7,16 @@ locals {
 
 provider "aws" {
   region  = "${var.region}"
-  #profile = "duduribeiro"
+  profile = "bgov-training-cchandler-admin"
+  version = "~> 1.27"
+}
+
+provider "random" {
+  version = "~> 1.3"
+}
+
+provider "template" {
+  version = "~> 1.0"
 }
 
 resource "aws_key_pair" "key" {

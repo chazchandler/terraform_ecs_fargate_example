@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "source" {
-  bucket        = "openjobs-experiment-source"
+  bucket        = "openjobs-experiment-source-cc"
   acl           = "private"
   force_destroy = true
 }
@@ -69,7 +69,7 @@ resource "aws_codebuild_project" "openjobs_build" {
   environment {
     compute_type    = "BUILD_GENERAL1_SMALL"
     // https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html
-    image           = "aws/codebuild/docker:1.12.1"
+    image           = "aws/codebuild/docker:17.09.0"
     type            = "LINUX_CONTAINER"
     privileged_mode = true
   }
@@ -103,8 +103,8 @@ resource "aws_codepipeline" "pipeline" {
       output_artifacts = ["source"]
 
       configuration {
-        Owner      = "duduribeiro"
-        Repo       = "openjobs_experiment"
+        Owner      = "chazchandler"
+        Repo       = "opensanca_jobs"
         Branch     = "master"
       }
     }
