@@ -2,7 +2,7 @@
   {
     "name": "db-migrate",
     "image": "${image}",
-    "command": ["bundle", "exec", "rake", "db:migrate"],
+    "command": ["bundle", "exec", "rake", "db:migrate", "ffcrm:demo:load_once", "ffcrm:setup:admin"],
     "memory": 300,
     "logConfiguration": {
       "logDriver": "awslogs",
@@ -24,6 +24,18 @@
       {
         "name": "SECRET_KEY_BASE",
         "value": "${secret_key_base}"
+      },
+      {
+        "name": "USERNAME",
+        "value": "${admin_username}"
+      },
+      {
+        "name": "PASSWORD",
+        "value": "${admin_password}"
+      },
+      {
+        "name": "EMAIL",
+        "value": "${admin_email}"
       },
       {
         "name": "RAILS_LOG_TO_STDOUT",

@@ -58,6 +58,9 @@ data "template_file" "db_migrate_task" {
   vars {
     image           = "${aws_ecr_repository.openjobs_app.repository_url}"
     secret_key_base = "${var.secret_key_base}"
+    admin_username  = "${var.admin_username}"
+    admin_password  = "${var.admin_password}"
+    admin_email     = "${var.admin_email}"
     database_url    = "postgresql://${var.database_username}:${var.database_password}@${var.database_endpoint}:5432/${var.database_name}?encoding=utf8&pool=40"
     log_group       = "openjobs"
   }
@@ -82,11 +85,16 @@ resource "random_id" "target_group_sufix" {
 }
 
 resource "aws_alb_target_group" "alb_target_group" {
-  name     = "${var.environment}-alb-target-group-${random_id.target_group_sufix.hex}"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = "${var.vpc_id}"
+  name        = "${var.environment}-alb-target-group-${random_id.target_group_sufix.hex}"
+  port        = "${var.port}"
+  protocol    = "HTTP"
+  vpc_id      = "${var.vpc_id}"
   target_type = "ip"
+
+  health_check {
+    path = "${var.healthcheck_path}"
+    port = "traffic-port"
+  }
 
   lifecycle {
     create_before_destroy = true
@@ -100,8 +108,8 @@ resource "aws_security_group" "web_inbound_sg" {
   vpc_id      = "${var.vpc_id}"
 
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = "${var.port}"
+    to_port     = "${var.port}"
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -138,7 +146,7 @@ resource "aws_alb" "alb_openjobs" {
 
 resource "aws_alb_listener" "openjobs" {
   load_balancer_arn = "${aws_alb.alb_openjobs.arn}"
-  port              = "80"
+  port              = "${var.port}"
   protocol          = "HTTP"
   depends_on        = ["aws_alb_target_group.alb_target_group"]
 
@@ -252,7 +260,7 @@ resource "aws_ecs_service" "web" {
   load_balancer {
     target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
     container_name   = "web"
-    container_port   = "80"
+    container_port   = "${var.port}"
   }
 
   depends_on = ["aws_alb_target_group.alb_target_group"]

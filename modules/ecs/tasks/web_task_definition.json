@@ -36,6 +36,10 @@
         "value": "80"
       },
       {
+        "name": "WEB_CONCURRENCY",
+        "value": "1"
+      },
+      {
         "name": "RAILS_LOG_TO_STDOUT",
         "value": "true"
       },

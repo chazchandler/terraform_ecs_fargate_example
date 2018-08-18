@@ -107,7 +107,7 @@ resource "aws_codepipeline" "pipeline" {
 
       configuration {
         Owner      = "chazchandler"
-        Repo       = "opensanca_jobs"
+        Repo       = "fat_free_crm"
         Branch     = "master"
       }
     }

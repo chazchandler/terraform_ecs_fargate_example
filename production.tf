@@ -63,5 +63,10 @@ module "ecs" {
   database_name       = "${var.production_database_name}"
   database_username   = "${var.production_database_username}"
   database_password   = "${var.production_database_password}"
+  admin_username      = "${var.production_admin_username}"
+  admin_password      = "${var.production_admin_password}"
+  admin_email         = "${var.production_admin_email}"
   secret_key_base     = "${var.production_secret_key_base}"
+  port                = "${var.production_app_port}"
+  healthcheck_path    = "${var.production_healthcheck_path}"
 }
